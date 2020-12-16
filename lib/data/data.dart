@@ -48,5 +48,11 @@ List<SliderModel> getSlides(){
 
    sliderModel = SliderModel();
 
+  sliderModel.setImageAssetPath("assets/principal.jpg");
+  sliderModel.setTitle("Testando terceira");
+  sliderModel.setDesc("TESTETEETETETEEFSDFFFFFFFFFFFFFFS");
+  slides.add(sliderModel);
+
+   sliderModel = SliderModel();
 return slides;
 }

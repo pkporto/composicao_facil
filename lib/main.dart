@@ -1,3 +1,5 @@
+import 'dart:html';
+
 import 'package:composicao_facil/data/data.dart';
 import 'package:flutter/material.dart';
 
@@ -27,6 +29,7 @@ class _HomeState extends State<Home> {
   List<SliderModel> slides = List<SliderModel>();
   int currentIndex = 0;
 
+  PageController pageController = new PageController(initialPage: 0);
   @override
   void initState() {
     super.initState();
@@ -35,7 +38,7 @@ class _HomeState extends State<Home> {
 
   Widget pageIndexIndicator(bool isCurrentPage){
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 2.0),
+      margin: EdgeInsets.symmetric(horizontal: 2.0),
       height: isCurrentPage ? 10.0 : 6.0,
       width: isCurrentPage ? 10.0 : 6.0,
       decoration: BoxDecoration(
@@ -49,6 +52,7 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: PageView.builder(
+        controller: pageController,
         itemCount: slides.length,
         onPageChanged: (value){
           setState(() {
@@ -64,29 +68,40 @@ class _HomeState extends State<Home> {
         },
         ),
         bottomSheet: currentIndex != slides.length - 1 ? Container(
+          height: 60,
+          padding: EdgeInsets.symmetric(horizontal: 20),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               InkWell(
                 child: Text("PULAR"),
                 onTap: (){
+                  pageController.animateToPage(slides.length - 1, duration: Duration(milliseconds: 400), curve: Curves.linear);
                 },
                 ),
               Row(
-                children: [
-                  for(int i = 0; i< slides.length; i++){
-                    currentIndex == i ? pageIndexIndicator(true) : pageIndexIndicator(false)
-                  }
+                children: <Widget>[
+                  for(int i = 0; i< slides.length; i++)currentIndex == i ? pageIndexIndicator(true) : pageIndexIndicator(false)
+                  
               ],),
               InkWell(
                 child: Text("PRÓXIMO"),
                 onTap: (){
-
+                  pageController.animateToPage(currentIndex + 1, duration: Duration(milliseconds: 400), curve: Curves.linear);
                 },
                 ),
             ],
           ),
-        ) : Container(child: Text("data"),) ,
+        ) : Container(
+          alignment: Alignment.center,
+          width: MediaQuery.of(context).size.width,
+          height: 60,
+          color: Colors.blue,
+          child: Text("Entrar",
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.w600
+          ),),) ,
     );
   }
 }
@@ -106,9 +121,13 @@ class SliderTile extends StatelessWidget {
         children: [
           Image.asset(imageAssetPath),
           SizedBox(height: 20),
-          Text(title),
+          Text(title,
+          style: TextStyle(fontWeight: FontWeight.w500,
+          fontSize: 20),),
           SizedBox(height: 12),
-          Text(desc)
+          Text(desc,
+          textAlign: TextAlign.center,
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400),)
         ]
       ),
     );
